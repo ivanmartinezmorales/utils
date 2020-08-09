@@ -1,6 +1,16 @@
 #!/usr/local/bin/python3 
 
 import time 
+import argparse
+"""
+Sets up and returns the parser
+"""
+def setup_parser():
+    parser = argparse.ArgumentParser(description='Start and run a pomodoro timer')
+    parser.add_argument('--study', type=int, default=25, help='The amount of time to study for')
+    parser.add_argument('--rest', type=int, default=5, help='The amount of time for breaks')
+    parser.add_argument('--loops', type=int, default=4, help='The number of loops to run through')
+    return parser
 
 """
 A countdown timer that takes in the number of seconds that it minutes that the timer
@@ -10,22 +20,20 @@ def countdown_timer(value, timer_type):
     t = value * 60
     while t != 0:
         mins, secs = divmod(t, 60)
-        timer = '{:02d}:{:02d}'.format(mins, secs)
+        timer = 'Time remaining: {:02d}:{:02d}'.format(mins, secs)
         print(timer, end="\r")
         time.sleep(1)
         t -= 1
     print("{} complete!".format(timer_type))
+    playsound('./chime.mp3')
 
-def main():
+def main(args):
     # Getting user input
-    print("welcome to the pomodoro timer")
-    print("Enter the number of minutes that you want to study for: ")
-    study_time = int(input())
-    print("Enter the number of minutes that you want to take a break for: ")
-    break_time = int(input())
-    print("Enter the number of times you want to repeat this loop: ")
-    repeat_count = int(input())
     # Reading user input back to user
+    study_time = args.study
+    break_time = args.rest
+    repeat_count = args.loops
+
     print("Okay, you're going to study for {} minutes and relax for {} minutes, and this will repeat {} times.".format(study_time, break_time, repeat_count))
      
     # Make these immutable, and multiply by 60 for minutes
@@ -35,4 +43,5 @@ def main():
     print("You have completed your pomodoro session. Goodbye!")
 
 if __name__ == "__main__":
-    main()
+    parser = setup_parser()
+    main(parser.parse_args())
