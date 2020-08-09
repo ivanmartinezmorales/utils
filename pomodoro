@@ -2,21 +2,32 @@
 
 import time 
 import argparse
+from playsound import playsound
+
 """
 Sets up and returns the parser
 """
 def setup_parser():
     parser = argparse.ArgumentParser(description='Start and run a pomodoro timer')
-    parser.add_argument('--study', type=int, default=25, help='The amount of time to study for')
-    parser.add_argument('--rest', type=int, default=5, help='The amount of time for breaks')
-    parser.add_argument('--loops', type=int, default=4, help='The number of loops to run through')
+    parser.add_argument('--study', 
+            type=int, 
+            default=25, 
+            help='The amount of time to study for')
+    parser.add_argument('--rest', 
+            type=int, 
+            default=5, 
+            help='The amount of time for breaks')
+    parser.add_argument('--loops', 
+            type=int, 
+            default=4, 
+            help='The number of loops to run through')
     return parser
 
 """
 A countdown timer that takes in the number of seconds that it minutes that the timer
 should run for.
 """
-def countdown_timer(value, timer_type):
+def countdown_timer(value, timer_type, silent):
     t = value * 60
     while t != 0:
         mins, secs = divmod(t, 60)
@@ -25,21 +36,18 @@ def countdown_timer(value, timer_type):
         time.sleep(1)
         t -= 1
     print("{} complete!".format(timer_type))
-    playsound('./chime.mp3')
 
 def main(args):
-    # Getting user input
-    # Reading user input back to user
     study_time = args.study
     break_time = args.rest
     repeat_count = args.loops
 
-    print("Okay, you're going to study for {} minutes and relax for {} minutes, and this will repeat {} times.".format(study_time, break_time, repeat_count))
+    print("Setting study session: \nStudy for {} minutes and relax for {} minutes, and this will repeat {} times.\n\n".format(study_time, break_time, repeat_count))
      
     # Make these immutable, and multiply by 60 for minutes
     for _ in range(repeat_count):
-        countdown_timer(study_time, "pomodoro")  
-        countdown_timer(break_time, "break")
+        countdown_timer(study_time, "pomodoro", args.silent)  
+        countdown_timer(break_time, "break", args.silent)
     print("You have completed your pomodoro session. Goodbye!")
 
 if __name__ == "__main__":
